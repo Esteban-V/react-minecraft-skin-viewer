@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import * as THREE from "three";
+
 import { Convert6432To6464, FixNonVisible, FixOverlay } from "./2dskin";
 
 export default class extends Component {
   static defaultProps = {
     width: 180,
     height: 320,
+    legs: true,
+    arms: true,
+    rotate: true,
     src: "https://crafatar.com/skins/a0baba3d574544a38d85e5034247e589",
   };
 
@@ -14,33 +18,33 @@ export default class extends Component {
   }
 
   componentDidMount() {
-    var { width, height } = this.props;
+    const { width, height, ...animationProps } = this.props;
 
-    var scene, camera, renderer;
-    var geometry, material, material2, mesh;
+    let scene, camera, renderer;
+    let geometry, material, material2, mesh;
 
-    var rightLeg2Box, leftLeg2Box;
-    var rightArmMesh, leftArmMesh, rightLegMesh, leftLegMesh;
-    var rightArm2Mesh, leftArm2Mesh, rightLeg2Mesh, leftLeg2Mesh;
+    let rightLeg2Box, leftLeg2Box;
+    let rightArmMesh, leftArmMesh, rightLegMesh, leftLegMesh;
+    let rightArm2Mesh, leftArm2Mesh, rightLeg2Mesh, leftLeg2Mesh;
 
-    var radius = 32;
-    var alpha = 0;
+    let radius = 32;
+    let alpha = 0;
 
-    var sidebarWidth = 250;
+    let sidebarWidth = 250;
 
     camera = new THREE.PerspectiveCamera(75, width / height, 1, 10000);
     camera.position.y = -12;
 
     scene = new THREE.Scene();
 
-    var canvas = document.getElementById("canvas");
+    let canvas = document.getElementById("canvas");
     canvas.width = 64;
     canvas.height = 64;
-    var context = canvas.getContext("2d");
+    let context = canvas.getContext("2d");
 
-    var skinTexture = new THREE.Texture(canvas);
+    let skinTexture = new THREE.Texture(canvas);
     //		THREE.ImageUtils.crossOrigin = '';
-    //		var skinTexture = new THREE.TextureLoader().load('https://mineskin.de/download/liziyi0914');
+    //		let skinTexture = new THREE.TextureLoader().load('https://mineskin.de/download/liziyi0914');
     skinTexture.magFilter = THREE.NearestFilter;
     skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
@@ -57,9 +61,9 @@ export default class extends Component {
       side: THREE.DoubleSide,
     });
 
-    var img = new Image();
+    let img = new Image();
     img.crossOrigin = "";
-    var hasAnimate = false;
+    let hasAnimate = false;
     img.onload = function () {
       console.log("Loaded Image");
 
@@ -82,7 +86,7 @@ export default class extends Component {
       if (!hasAnimate) {
         RenderSkin();
         hasAnimate = true;
-        Animate();
+        Animate(animationProps);
       }
     };
 
@@ -96,43 +100,43 @@ export default class extends Component {
 
     function RenderSkin() {
       // Head Parts
-      var headTop = [
+      let headTop = [
         new THREE.Vector2(0.125, 0.875),
         new THREE.Vector2(0.25, 0.875),
         new THREE.Vector2(0.25, 1),
         new THREE.Vector2(0.125, 1),
       ];
-      var headBottom = [
+      let headBottom = [
         new THREE.Vector2(0.25, 0.875),
         new THREE.Vector2(0.375, 0.875),
         new THREE.Vector2(0.375, 1),
         new THREE.Vector2(0.25, 1),
       ];
-      var headLeft = [
+      let headLeft = [
         new THREE.Vector2(0, 0.75),
         new THREE.Vector2(0.125, 0.75),
         new THREE.Vector2(0.125, 0.875),
         new THREE.Vector2(0, 0.875),
       ];
-      var headFront = [
+      let headFront = [
         new THREE.Vector2(0.125, 0.75),
         new THREE.Vector2(0.25, 0.75),
         new THREE.Vector2(0.25, 0.875),
         new THREE.Vector2(0.125, 0.875),
       ];
-      var headRight = [
+      let headRight = [
         new THREE.Vector2(0.25, 0.75),
         new THREE.Vector2(0.375, 0.75),
         new THREE.Vector2(0.375, 0.875),
         new THREE.Vector2(0.25, 0.875),
       ];
-      var headBack = [
+      let headBack = [
         new THREE.Vector2(0.375, 0.75),
         new THREE.Vector2(0.5, 0.75),
         new THREE.Vector2(0.5, 0.875),
         new THREE.Vector2(0.375, 0.875),
       ];
-      var headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
+      let headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
       headBox.faceVertexUvs[0] = [];
       headBox.faceVertexUvs[0][0] = [headRight[3], headRight[0], headRight[2]];
       headBox.faceVertexUvs[0][1] = [headRight[0], headRight[1], headRight[2]];
@@ -154,48 +158,48 @@ export default class extends Component {
       headBox.faceVertexUvs[0][9] = [headFront[0], headFront[1], headFront[2]];
       headBox.faceVertexUvs[0][10] = [headBack[3], headBack[0], headBack[2]];
       headBox.faceVertexUvs[0][11] = [headBack[0], headBack[1], headBack[2]];
-      var headMesh = new THREE.Mesh(headBox, material);
+      let headMesh = new THREE.Mesh(headBox, material);
       headMesh.name = "head";
       scene.add(headMesh);
 
       // Body Parts
-      var bodyTop = [
+      let bodyTop = [
         new THREE.Vector2(0.3125, 0.6875),
         new THREE.Vector2(0.4375, 0.6875),
         new THREE.Vector2(0.4375, 0.75),
         new THREE.Vector2(0.3125, 0.75),
       ];
-      var bodyBottom = [
+      let bodyBottom = [
         new THREE.Vector2(0.4375, 0.6875),
         new THREE.Vector2(0.5625, 0.6875),
         new THREE.Vector2(0.5625, 0.75),
         new THREE.Vector2(0.4375, 0.75),
       ];
-      var bodyLeft = [
+      let bodyLeft = [
         new THREE.Vector2(0.25, 0.5),
         new THREE.Vector2(0.3125, 0.5),
         new THREE.Vector2(0.3125, 0.6875),
         new THREE.Vector2(0.25, 0.6875),
       ];
-      var bodyFront = [
+      let bodyFront = [
         new THREE.Vector2(0.3125, 0.5),
         new THREE.Vector2(0.4375, 0.5),
         new THREE.Vector2(0.4375, 0.6875),
         new THREE.Vector2(0.3125, 0.6875),
       ];
-      var bodyRight = [
+      let bodyRight = [
         new THREE.Vector2(0.4375, 0.5),
         new THREE.Vector2(0.5, 0.5),
         new THREE.Vector2(0.5, 0.6875),
         new THREE.Vector2(0.4375, 0.6875),
       ];
-      var bodyBack = [
+      let bodyBack = [
         new THREE.Vector2(0.5, 0.5),
         new THREE.Vector2(0.625, 0.5),
         new THREE.Vector2(0.625, 0.6875),
         new THREE.Vector2(0.5, 0.6875),
       ];
-      var bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
+      let bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
       bodyBox.faceVertexUvs[0] = [];
       bodyBox.faceVertexUvs[0][0] = [bodyRight[3], bodyRight[0], bodyRight[2]];
       bodyBox.faceVertexUvs[0][1] = [bodyRight[0], bodyRight[1], bodyRight[2]];
@@ -217,49 +221,49 @@ export default class extends Component {
       bodyBox.faceVertexUvs[0][9] = [bodyFront[0], bodyFront[1], bodyFront[2]];
       bodyBox.faceVertexUvs[0][10] = [bodyBack[3], bodyBack[0], bodyBack[2]];
       bodyBox.faceVertexUvs[0][11] = [bodyBack[0], bodyBack[1], bodyBack[2]];
-      var bodyMesh = new THREE.Mesh(bodyBox, material);
+      let bodyMesh = new THREE.Mesh(bodyBox, material);
       bodyMesh.name = "body";
       bodyMesh.position.y = -10;
       scene.add(bodyMesh);
 
       // Right Arm Parts
-      var rightArmTop = [
+      let rightArmTop = [
         new THREE.Vector2(0.6875, 0.6875),
         new THREE.Vector2(0.75, 0.6875),
         new THREE.Vector2(0.75, 0.75),
         new THREE.Vector2(0.6875, 0.75),
       ];
-      var rightArmBottom = [
+      let rightArmBottom = [
         new THREE.Vector2(0.75, 0.6875),
         new THREE.Vector2(0.8125, 0.6875),
         new THREE.Vector2(0.8125, 0.75),
         new THREE.Vector2(0.75, 0.75),
       ];
-      var rightArmLeft = [
+      let rightArmLeft = [
         new THREE.Vector2(0.625, 0.5),
         new THREE.Vector2(0.6875, 0.5),
         new THREE.Vector2(0.6875, 0.6875),
         new THREE.Vector2(0.625, 0.6875),
       ];
-      var rightArmFront = [
+      let rightArmFront = [
         new THREE.Vector2(0.6875, 0.5),
         new THREE.Vector2(0.75, 0.5),
         new THREE.Vector2(0.75, 0.6875),
         new THREE.Vector2(0.6875, 0.6875),
       ];
-      var rightArmRight = [
+      let rightArmRight = [
         new THREE.Vector2(0.75, 0.5),
         new THREE.Vector2(0.8125, 0.5),
         new THREE.Vector2(0.8125, 0.6875),
         new THREE.Vector2(0.75, 0.6875),
       ];
-      var rightArmBack = [
+      let rightArmBack = [
         new THREE.Vector2(0.8125, 0.5),
         new THREE.Vector2(0.875, 0.5),
         new THREE.Vector2(0.875, 0.6875),
         new THREE.Vector2(0.8125, 0.6875),
       ];
-      var rightArmBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
+      let rightArmBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
       rightArmBox.faceVertexUvs[0] = [];
       rightArmBox.faceVertexUvs[0][0] = [
         rightArmRight[3],
@@ -328,43 +332,43 @@ export default class extends Component {
       scene.add(rightArmMesh);
 
       // Left Arm Parts
-      var leftArmTop = [
+      let leftArmTop = [
         new THREE.Vector2(0.5625, 0.1875),
         new THREE.Vector2(0.625, 0.1875),
         new THREE.Vector2(0.625, 0.25),
         new THREE.Vector2(0.5625, 0.25),
       ];
-      var leftArmBottom = [
+      let leftArmBottom = [
         new THREE.Vector2(0.625, 0.1875),
         new THREE.Vector2(0.6875, 0.1875),
         new THREE.Vector2(0.6875, 0.25),
         new THREE.Vector2(0.625, 0.25),
       ];
-      var leftArmLeft = [
+      let leftArmLeft = [
         new THREE.Vector2(0.5, 0),
         new THREE.Vector2(0.5625, 0),
         new THREE.Vector2(0.5625, 0.1875),
         new THREE.Vector2(0.5, 0.1875),
       ];
-      var leftArmFront = [
+      let leftArmFront = [
         new THREE.Vector2(0.5625, 0),
         new THREE.Vector2(0.625, 0),
         new THREE.Vector2(0.625, 0.1875),
         new THREE.Vector2(0.5625, 0.1875),
       ];
-      var leftArmRight = [
+      let leftArmRight = [
         new THREE.Vector2(0.625, 0),
         new THREE.Vector2(0.6875, 0),
         new THREE.Vector2(0.6875, 0.1875),
         new THREE.Vector2(0.625, 0.1875),
       ];
-      var leftArmBack = [
+      let leftArmBack = [
         new THREE.Vector2(0.6875, 0),
         new THREE.Vector2(0.75, 0),
         new THREE.Vector2(0.75, 0.1875),
         new THREE.Vector2(0.6875, 0.1875),
       ];
-      var leftArmBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
+      let leftArmBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
       leftArmBox.faceVertexUvs[0] = [];
       leftArmBox.faceVertexUvs[0][0] = [
         leftArmRight[3],
@@ -433,43 +437,43 @@ export default class extends Component {
       scene.add(leftArmMesh);
 
       // Right Leg Parts
-      var rightLegTop = [
+      let rightLegTop = [
         new THREE.Vector2(0.0625, 0.6875),
         new THREE.Vector2(0.125, 0.6875),
         new THREE.Vector2(0.125, 0.75),
         new THREE.Vector2(0.0625, 0.75),
       ];
-      var rightLegBottom = [
+      let rightLegBottom = [
         new THREE.Vector2(0.125, 0.6875),
         new THREE.Vector2(0.1875, 0.6875),
         new THREE.Vector2(0.1875, 0.75),
         new THREE.Vector2(0.125, 0.75),
       ];
-      var rightLegLeft = [
+      let rightLegLeft = [
         new THREE.Vector2(0, 0.5),
         new THREE.Vector2(0.0625, 0.5),
         new THREE.Vector2(0.0625, 0.6875),
         new THREE.Vector2(0, 0.6875),
       ];
-      var rightLegFront = [
+      let rightLegFront = [
         new THREE.Vector2(0.0625, 0.5),
         new THREE.Vector2(0.125, 0.5),
         new THREE.Vector2(0.125, 0.6875),
         new THREE.Vector2(0.0625, 0.6875),
       ];
-      var rightLegRight = [
+      let rightLegRight = [
         new THREE.Vector2(0.125, 0.5),
         new THREE.Vector2(0.1875, 0.5),
         new THREE.Vector2(0.1875, 0.6875),
         new THREE.Vector2(0.125, 0.6875),
       ];
-      var rightLegBack = [
+      let rightLegBack = [
         new THREE.Vector2(0.1875, 0.5),
         new THREE.Vector2(0.25, 0.5),
         new THREE.Vector2(0.25, 0.6875),
         new THREE.Vector2(0.1875, 0.6875),
       ];
-      var rightLegBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
+      let rightLegBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
       rightLegBox.faceVertexUvs[0] = [];
       rightLegBox.faceVertexUvs[0][0] = [
         rightLegRight[3],
@@ -538,43 +542,43 @@ export default class extends Component {
       scene.add(rightLegMesh);
 
       // Left Leg Parts
-      var leftLegTop = [
+      let leftLegTop = [
         new THREE.Vector2(0.3125, 0.1875),
         new THREE.Vector2(0.375, 0.1875),
         new THREE.Vector2(0.375, 0.25),
         new THREE.Vector2(0.3125, 0.25),
       ];
-      var leftLegBottom = [
+      let leftLegBottom = [
         new THREE.Vector2(0.375, 0.1875),
         new THREE.Vector2(0.4375, 0.1875),
         new THREE.Vector2(0.4375, 0.25),
         new THREE.Vector2(0.375, 0.25),
       ];
-      var leftLegLeft = [
+      let leftLegLeft = [
         new THREE.Vector2(0.25, 0),
         new THREE.Vector2(0.3125, 0),
         new THREE.Vector2(0.3125, 0.1875),
         new THREE.Vector2(0.25, 0.1875),
       ];
-      var leftLegFront = [
+      let leftLegFront = [
         new THREE.Vector2(0.3125, 0),
         new THREE.Vector2(0.375, 0),
         new THREE.Vector2(0.375, 0.1875),
         new THREE.Vector2(0.3125, 0.1875),
       ];
-      var leftLegRight = [
+      let leftLegRight = [
         new THREE.Vector2(0.375, 0),
         new THREE.Vector2(0.4375, 0),
         new THREE.Vector2(0.4375, 0.1875),
         new THREE.Vector2(0.375, 0.1875),
       ];
-      var leftLegBack = [
+      let leftLegBack = [
         new THREE.Vector2(0.4375, 0),
         new THREE.Vector2(0.5, 0),
         new THREE.Vector2(0.5, 0.1875),
         new THREE.Vector2(0.4375, 0.1875),
       ];
-      var leftLegBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
+      let leftLegBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
       leftLegBox.faceVertexUvs[0] = [];
       leftLegBox.faceVertexUvs[0][0] = [
         leftLegRight[3],
@@ -643,43 +647,43 @@ export default class extends Component {
       scene.add(leftLegMesh);
 
       // Head Overlay Parts
-      var head2Top = [
+      let head2Top = [
         new THREE.Vector2(0.625, 0.875),
         new THREE.Vector2(0.75, 0.875),
         new THREE.Vector2(0.75, 1),
         new THREE.Vector2(0.625, 1),
       ];
-      var head2Bottom = [
+      let head2Bottom = [
         new THREE.Vector2(0.75, 0.875),
         new THREE.Vector2(0.875, 0.875),
         new THREE.Vector2(0.875, 1),
         new THREE.Vector2(0.75, 1),
       ];
-      var head2Left = [
+      let head2Left = [
         new THREE.Vector2(0.5, 0.75),
         new THREE.Vector2(0.625, 0.75),
         new THREE.Vector2(0.625, 0.875),
         new THREE.Vector2(0.5, 0.875),
       ];
-      var head2Front = [
+      let head2Front = [
         new THREE.Vector2(0.625, 0.75),
         new THREE.Vector2(0.75, 0.75),
         new THREE.Vector2(0.75, 0.875),
         new THREE.Vector2(0.625, 0.875),
       ];
-      var head2Right = [
+      let head2Right = [
         new THREE.Vector2(0.75, 0.75),
         new THREE.Vector2(0.875, 0.75),
         new THREE.Vector2(0.875, 0.875),
         new THREE.Vector2(0.75, 0.875),
       ];
-      var head2Back = [
+      let head2Back = [
         new THREE.Vector2(0.875, 0.75),
         new THREE.Vector2(1, 0.75),
         new THREE.Vector2(1, 0.875),
         new THREE.Vector2(0.875, 0.875),
       ];
-      var head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
+      let head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
       head2Box.faceVertexUvs[0] = [];
       head2Box.faceVertexUvs[0][0] = [
         head2Right[3],
@@ -725,48 +729,48 @@ export default class extends Component {
         head2Back[1],
         head2Back[2],
       ];
-      var head2Mesh = new THREE.Mesh(head2Box, material2);
+      let head2Mesh = new THREE.Mesh(head2Box, material2);
       head2Mesh.name = "head2";
       scene.add(head2Mesh);
 
       // Body Overlay Parts
-      var body2Top = [
+      let body2Top = [
         new THREE.Vector2(0.3125, 0.4375),
         new THREE.Vector2(0.4375, 0.4375),
         new THREE.Vector2(0.4375, 0.5),
         new THREE.Vector2(0.3125, 0.5),
       ];
-      var body2Bottom = [
+      let body2Bottom = [
         new THREE.Vector2(0.4375, 0.4375),
         new THREE.Vector2(0.5625, 0.4375),
         new THREE.Vector2(0.5625, 0.5),
         new THREE.Vector2(0.4375, 0.5),
       ];
-      var body2Left = [
+      let body2Left = [
         new THREE.Vector2(0.25, 0.25),
         new THREE.Vector2(0.3125, 0.25),
         new THREE.Vector2(0.3125, 0.4375),
         new THREE.Vector2(0.25, 0.4375),
       ];
-      var body2Front = [
+      let body2Front = [
         new THREE.Vector2(0.3125, 0.25),
         new THREE.Vector2(0.4375, 0.25),
         new THREE.Vector2(0.4375, 0.4375),
         new THREE.Vector2(0.3125, 0.4375),
       ];
-      var body2Right = [
+      let body2Right = [
         new THREE.Vector2(0.4375, 0.25),
         new THREE.Vector2(0.5, 0.25),
         new THREE.Vector2(0.5, 0.4375),
         new THREE.Vector2(0.4375, 0.4375),
       ];
-      var body2Back = [
+      let body2Back = [
         new THREE.Vector2(0.5, 0.25),
         new THREE.Vector2(0.625, 0.25),
         new THREE.Vector2(0.625, 0.4375),
         new THREE.Vector2(0.5, 0.4375),
       ];
-      var body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
+      let body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
       body2Box.faceVertexUvs[0] = [];
       body2Box.faceVertexUvs[0][0] = [
         body2Right[3],
@@ -812,49 +816,49 @@ export default class extends Component {
         body2Back[1],
         body2Back[2],
       ];
-      var body2Mesh = new THREE.Mesh(body2Box, material2);
+      let body2Mesh = new THREE.Mesh(body2Box, material2);
       body2Mesh.name = "body2";
       body2Mesh.position.y = -10;
       scene.add(body2Mesh);
 
       // Right Arm Overlay Parts
-      var rightArm2Top = [
+      let rightArm2Top = [
         new THREE.Vector2(0.6875, 0.4375),
         new THREE.Vector2(0.75, 0.4375),
         new THREE.Vector2(0.75, 0.5),
         new THREE.Vector2(0.6875, 0.5),
       ];
-      var rightArm2Bottom = [
+      let rightArm2Bottom = [
         new THREE.Vector2(0.75, 0.4375),
         new THREE.Vector2(0.8125, 0.4375),
         new THREE.Vector2(0.8125, 0.5),
         new THREE.Vector2(0.75, 0.5),
       ];
-      var rightArm2Left = [
+      let rightArm2Left = [
         new THREE.Vector2(0.625, 0.25),
         new THREE.Vector2(0.6875, 0.25),
         new THREE.Vector2(0.6875, 0.4375),
         new THREE.Vector2(0.625, 0.4375),
       ];
-      var rightArm2Front = [
+      let rightArm2Front = [
         new THREE.Vector2(0.6875, 0.25),
         new THREE.Vector2(0.75, 0.25),
         new THREE.Vector2(0.75, 0.4375),
         new THREE.Vector2(0.6875, 0.4375),
       ];
-      var rightArm2Right = [
+      let rightArm2Right = [
         new THREE.Vector2(0.75, 0.25),
         new THREE.Vector2(0.8125, 0.25),
         new THREE.Vector2(0.8125, 0.4375),
         new THREE.Vector2(0.75, 0.4375),
       ];
-      var rightArm2Back = [
+      let rightArm2Back = [
         new THREE.Vector2(0.8125, 0.25),
         new THREE.Vector2(0.875, 0.25),
         new THREE.Vector2(0.875, 0.4375),
         new THREE.Vector2(0.8125, 0.4375),
       ];
-      var rightArm2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+      let rightArm2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
       rightArm2Box.faceVertexUvs[0] = [];
       rightArm2Box.faceVertexUvs[0][0] = [
         rightArm2Right[3],
@@ -923,43 +927,43 @@ export default class extends Component {
       scene.add(rightArm2Mesh);
 
       // Left Arm Overlay Parts
-      var leftArm2Top = [
+      let leftArm2Top = [
         new THREE.Vector2(0.8125, 0.1875),
         new THREE.Vector2(0.875, 0.1875),
         new THREE.Vector2(0.875, 0.25),
         new THREE.Vector2(0.8125, 0.25),
       ];
-      var leftArm2Bottom = [
+      let leftArm2Bottom = [
         new THREE.Vector2(0.875, 0.1875),
         new THREE.Vector2(0.9375, 0.1875),
         new THREE.Vector2(0.9375, 0.25),
         new THREE.Vector2(0.875, 0.25),
       ];
-      var leftArm2Left = [
+      let leftArm2Left = [
         new THREE.Vector2(0.75, 0),
         new THREE.Vector2(0.8125, 0),
         new THREE.Vector2(0.8125, 0.1875),
         new THREE.Vector2(0.75, 0.1875),
       ];
-      var leftArm2Front = [
+      let leftArm2Front = [
         new THREE.Vector2(0.8125, 0),
         new THREE.Vector2(0.875, 0),
         new THREE.Vector2(0.875, 0.1875),
         new THREE.Vector2(0.8125, 0.1875),
       ];
-      var leftArm2Right = [
+      let leftArm2Right = [
         new THREE.Vector2(0.875, 0),
         new THREE.Vector2(0.9375, 0),
         new THREE.Vector2(0.9375, 0.1875),
         new THREE.Vector2(0.875, 0.1875),
       ];
-      var leftArm2Back = [
+      let leftArm2Back = [
         new THREE.Vector2(0.9375, 0),
         new THREE.Vector2(1, 0),
         new THREE.Vector2(1, 0.1875),
         new THREE.Vector2(0.9375, 0.1875),
       ];
-      var leftArm2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+      let leftArm2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
       leftArm2Box.faceVertexUvs[0] = [];
       leftArm2Box.faceVertexUvs[0][0] = [
         leftArm2Right[3],
@@ -1028,43 +1032,43 @@ export default class extends Component {
       scene.add(leftArm2Mesh);
 
       // Right Leg Overlay Parts
-      var rightLeg2Top = [
+      let rightLeg2Top = [
         new THREE.Vector2(0.0625, 0.4375),
         new THREE.Vector2(0.125, 0.4375),
         new THREE.Vector2(0.125, 0.5),
         new THREE.Vector2(0.0625, 0.5),
       ];
-      var rightLeg2Bottom = [
+      let rightLeg2Bottom = [
         new THREE.Vector2(0.125, 0.4375),
         new THREE.Vector2(0.1875, 0.4375),
         new THREE.Vector2(0.1875, 0.5),
         new THREE.Vector2(0.125, 0.5),
       ];
-      var rightLeg2Left = [
+      let rightLeg2Left = [
         new THREE.Vector2(0, 0.25),
         new THREE.Vector2(0.0625, 0.25),
         new THREE.Vector2(0.0625, 0.4375),
         new THREE.Vector2(0, 0.4375),
       ];
-      var rightLeg2Front = [
+      let rightLeg2Front = [
         new THREE.Vector2(0.0625, 0.25),
         new THREE.Vector2(0.125, 0.25),
         new THREE.Vector2(0.125, 0.4375),
         new THREE.Vector2(0.0625, 0.4375),
       ];
-      var rightLeg2Right = [
+      let rightLeg2Right = [
         new THREE.Vector2(0.125, 0.25),
         new THREE.Vector2(0.1875, 0.25),
         new THREE.Vector2(0.1875, 0.4375),
         new THREE.Vector2(0.125, 0.4375),
       ];
-      var rightLeg2Back = [
+      let rightLeg2Back = [
         new THREE.Vector2(0.1875, 0.25),
         new THREE.Vector2(0.25, 0.25),
         new THREE.Vector2(0.25, 0.4375),
         new THREE.Vector2(0.1875, 0.4375),
       ];
-      var rightLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+      let rightLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
       rightLeg2Box.faceVertexUvs[0] = [];
       rightLeg2Box.faceVertexUvs[0][0] = [
         rightLeg2Right[3],
@@ -1133,43 +1137,43 @@ export default class extends Component {
       scene.add(rightLeg2Mesh);
 
       // Left Leg Overlay Parts
-      var leftLeg2Top = [
+      let leftLeg2Top = [
         new THREE.Vector2(0.0625, 0.1875),
         new THREE.Vector2(0.125, 0.1875),
         new THREE.Vector2(0.125, 0.25),
         new THREE.Vector2(0.0625, 0.25),
       ];
-      var leftLeg2Bottom = [
+      let leftLeg2Bottom = [
         new THREE.Vector2(0.125, 0.1875),
         new THREE.Vector2(0.1875, 0.1875),
         new THREE.Vector2(0.1875, 0.25),
         new THREE.Vector2(0.125, 0.25),
       ];
-      var leftLeg2Left = [
+      let leftLeg2Left = [
         new THREE.Vector2(0, 0),
         new THREE.Vector2(0.0625, 0),
         new THREE.Vector2(0.0625, 0.1875),
         new THREE.Vector2(0, 0.1875),
       ];
-      var leftLeg2Front = [
+      let leftLeg2Front = [
         new THREE.Vector2(0.0625, 0),
         new THREE.Vector2(0.125, 0),
         new THREE.Vector2(0.125, 0.1875),
         new THREE.Vector2(0.0625, 0.1875),
       ];
-      var leftLeg2Right = [
+      let leftLeg2Right = [
         new THREE.Vector2(0.125, 0),
         new THREE.Vector2(0.1875, 0),
         new THREE.Vector2(0.1875, 0.1875),
         new THREE.Vector2(0.125, 0.1875),
       ];
-      var leftLeg2Back = [
+      let leftLeg2Back = [
         new THREE.Vector2(0.1875, 0),
         new THREE.Vector2(0.25, 0),
         new THREE.Vector2(0.25, 0.1875),
         new THREE.Vector2(0.1875, 0.1875),
       ];
-      var leftLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+      let leftLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
       leftLeg2Box.faceVertexUvs[0] = [];
       leftLeg2Box.faceVertexUvs[0][0] = [
         leftLeg2Right[3],
@@ -1238,7 +1242,7 @@ export default class extends Component {
       scene.add(leftLeg2Mesh);
 
       // Add to page
-      var container = document.getElementById("model");
+      let container = document.getElementById("model");
 
       renderer = new THREE.WebGLRenderer({ alpha: true });
       renderer.setSize(width, height);
@@ -1255,43 +1259,51 @@ export default class extends Component {
       renderer.setSize(window.innerWidth - sidebarWidth, window.innerHeight);
     }
 
-    function Animate() {
-      requestAnimationFrame(Animate);
+    function Animate({ legs, arms, rotate }) {
+      requestAnimationFrame(() => Animate({ legs, arms, rotate }));
 
       camera.rotation.y = alpha;
 
-      //alpha = /*(Math.PI / 2)*/ + (Math.PI / 16);
-      alpha += Math.PI / 320;
-      camera.position.z = radius * Math.cos(alpha);
-      camera.position.x = radius * Math.sin(alpha);
+      if (rotate) {
+        //alpha = /*(Math.PI / 2)*/ + (Math.PI / 16);
+        alpha += Math.PI / 320;
+        camera.position.z = radius * Math.cos(alpha);
+        camera.position.x = radius * Math.sin(alpha);
+      }
 
       //Leg Swing
-      leftLeg2Mesh.rotation.x = leftLegMesh.rotation.x = Math.cos(alpha * 4);
-      leftLeg2Mesh.position.z = leftLegMesh.position.z =
-        0 - 6 * Math.sin(leftLegMesh.rotation.x);
-      leftLeg2Mesh.position.y = leftLegMesh.position.y =
-        -16 - 6 * Math.abs(Math.cos(leftLegMesh.rotation.x));
-      rightLeg2Mesh.rotation.x = rightLegMesh.rotation.x = Math.cos(
-        alpha * 4 + Math.PI
-      );
-      rightLeg2Mesh.position.z = rightLegMesh.position.z =
-        0 - 6 * Math.sin(rightLegMesh.rotation.x);
-      rightLeg2Mesh.position.y = rightLegMesh.position.y =
-        -16 - 6 * Math.abs(Math.cos(rightLegMesh.rotation.x));
+      if (legs) {
+        leftLeg2Mesh.rotation.x = leftLegMesh.rotation.x = Math.cos(alpha * 4);
+        leftLeg2Mesh.position.z = leftLegMesh.position.z =
+          0 - 6 * Math.sin(leftLegMesh.rotation.x);
+        leftLeg2Mesh.position.y = leftLegMesh.position.y =
+          -16 - 6 * Math.abs(Math.cos(leftLegMesh.rotation.x));
+        rightLeg2Mesh.rotation.x = rightLegMesh.rotation.x = Math.cos(
+          alpha * 4 + Math.PI
+        );
+        rightLeg2Mesh.position.z = rightLegMesh.position.z =
+          0 - 6 * Math.sin(rightLegMesh.rotation.x);
+        rightLeg2Mesh.position.y = rightLegMesh.position.y =
+          -16 - 6 * Math.abs(Math.cos(rightLegMesh.rotation.x));
+      }
 
       //Arm Swing
-      leftArm2Mesh.rotation.x = leftArmMesh.rotation.x = Math.cos(
-        alpha * 4 + Math.PI
-      );
-      leftArm2Mesh.position.z = leftArmMesh.position.z =
-        0 - 6 * Math.sin(leftArmMesh.rotation.x);
-      leftArm2Mesh.position.y = leftArmMesh.position.y =
-        -4 - 6 * Math.abs(Math.cos(leftArmMesh.rotation.x));
-      rightArm2Mesh.rotation.x = rightArmMesh.rotation.x = Math.cos(alpha * 4);
-      rightArm2Mesh.position.z = rightArmMesh.position.z =
-        0 - 6 * Math.sin(rightArmMesh.rotation.x);
-      rightArm2Mesh.position.y = rightArmMesh.position.y =
-        -4 - 6 * Math.abs(Math.cos(rightArmMesh.rotation.x));
+      if (arms) {
+        leftArm2Mesh.rotation.x = leftArmMesh.rotation.x = Math.cos(
+          alpha * 4 + Math.PI
+        );
+        leftArm2Mesh.position.z = leftArmMesh.position.z =
+          0 - 6 * Math.sin(leftArmMesh.rotation.x);
+        leftArm2Mesh.position.y = leftArmMesh.position.y =
+          -4 - 6 * Math.abs(Math.cos(leftArmMesh.rotation.x));
+        rightArm2Mesh.rotation.x = rightArmMesh.rotation.x = Math.cos(
+          alpha * 4
+        );
+        rightArm2Mesh.position.z = rightArmMesh.position.z =
+          0 - 6 * Math.sin(rightArmMesh.rotation.x);
+        rightArm2Mesh.position.y = rightArmMesh.position.y =
+          -4 - 6 * Math.abs(Math.cos(rightArmMesh.rotation.x));
+      }
 
       renderer.render(scene, camera);
     }
