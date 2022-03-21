@@ -8,7 +8,7 @@ class Demo extends Component {
     return (
       <div>
         <h1>react-minecraft-skin-viewer Demo</h1>
-        <Example arms={false} />
+        <Example width={312} rotate={false} />
       </div>
     );
   }

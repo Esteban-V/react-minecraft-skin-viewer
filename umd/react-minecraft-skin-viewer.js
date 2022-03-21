@@ -51080,13 +51080,17 @@ var src_default = (_temp = _class = function (_Component) {
         return Animate({ legs: legs, arms: arms, rotate: rotate });
       });
 
-      camera.rotation.y = alpha;
+      //alpha = /*(Math.PI / 2)*/ + (Math.PI / 16);
+      alpha += Math.PI / 320;
 
       if (rotate) {
-        //alpha = /*(Math.PI / 2)*/ + (Math.PI / 16);
-        alpha += Math.PI / 320;
+        camera.rotation.y = alpha;
         camera.position.z = radius * Math.cos(alpha);
         camera.position.x = radius * Math.sin(alpha);
+      } else {
+        camera.rotation.y = -0.6;
+        camera.position.z = 30;
+        camera.position.x = -18;
       }
 
       //Leg Swing
