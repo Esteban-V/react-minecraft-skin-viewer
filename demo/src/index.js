@@ -8,7 +8,11 @@ class Demo extends Component {
     return (
       <div>
         <h1>react-minecraft-skin-viewer Demo</h1>
-        <Example width={312} rotate={false} />
+        <Example
+          width={312}
+          rotate={false}
+          uuid={"a0baba3d-5745-44a3-8d85-e5034247e589"}
+        />
       </div>
     );
   }
