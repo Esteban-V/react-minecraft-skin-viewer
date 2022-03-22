@@ -13,6 +13,9 @@ import * as THREE from "three";
 
 import { Convert6432To6464, FixNonVisible, FixOverlay } from "./2dskin";
 
+// I use crafatar because it allows CORS requests.
+var skinURL = "https://crafatar.com/skins/";
+
 var _default = (_temp = _class = function (_Component) {
   _inherits(_default, _Component);
 
@@ -26,7 +29,8 @@ var _default = (_temp = _class = function (_Component) {
     var _props = this.props,
         width = _props.width,
         height = _props.height,
-        animationProps = _objectWithoutProperties(_props, ["width", "height"]);
+        uuid = _props.uuid,
+        animationProps = _objectWithoutProperties(_props, ["width", "height", "uuid"]);
 
     var scene = void 0,
         camera = void 0,
@@ -83,6 +87,7 @@ var _default = (_temp = _class = function (_Component) {
 
     var img = new Image();
     img.crossOrigin = "";
+
     var hasAnimate = false;
     img.onload = function () {
       console.log("Loaded Image");
@@ -114,9 +119,7 @@ var _default = (_temp = _class = function (_Component) {
       console.log("Failed loading " + img.src);
     };
 
-    // I use crafatar because it allows CORS requests.
-    // Minotar stopped working.
-    img.src = this.props.src;
+    img.src = !!uuid ? skinURL + uuid : skinURL + "236fe698-6549-43fb-b37d-a63f5e15ebbb";
 
     function RenderSkin() {
       // Head Parts
@@ -522,7 +525,7 @@ var _default = (_temp = _class = function (_Component) {
   legs: true,
   arms: true,
   rotate: true,
-  src: "https://crafatar.com/skins/a0baba3d574544a38d85e5034247e589"
+  uuid: "236fe698-6549-43fb-b37d-a63f5e15ebbb"
 }, _temp);
 
 export { _default as default };
